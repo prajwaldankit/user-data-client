@@ -1,28 +1,40 @@
 import React, { Component } from "react";
-import * as userServices from "./services/user";
-import CreateUser from "./pages/userForm";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import UserList from "./pages/userList";
+import UserForm from "./pages/userForm";
+import UserProfile from "./pages/userProfile";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       users: [],
+      isShowingList: true,
     };
-  }
-
-  getUserData() {
-    userServices.getAllUsers().then((response) => {});
-  }
-
-  getUserWithId() {
-    userServices.getUserWithId("2").then((response) => {});
   }
 
   render() {
     return (
-      <div className="App">
-        <CreateUser />
-      </div>
+      <Router>
+        <Switch>
+          <Route exact path={["/home", "/users", "/"]}>
+            {(props) => {
+              return <UserList {...props} />;
+            }}
+          </Route>
+          <Route exact path="/users/create">
+            {(props) => {
+              return <UserForm {...props} />;
+            }}
+          </Route>
+          <Route path="/users/:id">
+            {(props) => {
+              return <UserProfile {...props} />;
+            }}
+          </Route>
+        </Switch>
+      </Router>
     );
   }
 }
